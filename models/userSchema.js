@@ -2,6 +2,8 @@ import mongoose  from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+
 const userSchema = new mongoose.Schema({
    firstName :{
     type:String,
@@ -28,8 +30,8 @@ const userSchema = new mongoose.Schema({
    nic:{
     type:String,
     required:true,
-    minLength:[13,"NIC  Must Contains At least 10 Characters"],
-    maxLength:[13,"NIC  Must Contains At most 10 Characters"],
+    minLength:[10,"NIC  Must Contains At least 10 Characters"],
+    maxLength:[10,"NIC  Must Contains At most 10 Characters"],
    },
    dob:{
     type:Date,
@@ -44,7 +46,7 @@ const userSchema = new mongoose.Schema({
    },
    password:{
     type:String,
-    minLength:[11,"Password Must Contain At Least 8 Characters!"],
+    minLength:[8,"Password Must Contain At Least 8 Characters!"],
     required:true,
     select:false,
    },
@@ -61,6 +63,7 @@ const userSchema = new mongoose.Schema({
      public_id:String,
      url:String
    },
+  //  generateJsonWebToken(): string;
 })
 
 userSchema.pre("save",async function(next){
@@ -78,7 +81,12 @@ userSchema.methods.comparePassword = async function(enteredPassword){
 
 
 userSchema.methods.generateJsonWebToken = function(){
-  return jwt.sign({id: this._id},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES,})
+  return jwt.sign({id: this._id},process.env.JWT_SECRET_KEY,{expiresIn:process.env.JWT_EXPIRES,})
 }
+// userSchema.methods.generateJsonWebToken = function (): string {
+//   return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY as string, {
+//     expiresIn: process.env.JWT_EXPIRES,
+//   });
+// };
 
 export const User = mongoose.model("User",userSchema)

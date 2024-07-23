@@ -7,7 +7,9 @@ import { dbCoonection } from "./database/dbConnection.js";
 import messageRouter from "./router/messageRouter.js"
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import userRouter from "./router/userRouter.js";
+import appointementRouter from "./router/appointementRouter.js";
 const app = express();
+dbCoonection();
  
 config({path:"./config/config.env"})
 
@@ -24,7 +26,7 @@ app.use(cookieParser());
 app.use(express.json());
 //To pass json data as a string
 
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:false}));
 app.use(fileUpload({
     useTempFiles:true,
     tempFileDir:"/temp/",
@@ -32,8 +34,8 @@ app.use(fileUpload({
 }));
 
 app.use("/api/v1/message",messageRouter);
-app.use("/api/v1/user",userRouter)
-dbCoonection();
+app.use("/api/v1/user",userRouter);
+app.use("/api/v1/appointement",appointementRouter);
 app.use(errorMiddleware);
 export default app;
 
